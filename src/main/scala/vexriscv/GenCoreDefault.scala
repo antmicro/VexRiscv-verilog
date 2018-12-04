@@ -2,6 +2,7 @@ package vexriscv
 
 import spinal.core._
 import spinal.lib._
+import spinal.lib.com.jtag.Jtag
 import vexriscv.ip.{DataCacheConfig, InstructionCacheConfig}
 import vexriscv.plugin.CsrAccess.WRITE_ONLY
 import vexriscv.plugin._
@@ -15,7 +16,7 @@ object SpinalConfig extends spinal.core.SpinalConfig(
 )
 
 case class ArgConfig(
-  debug : Boolean = false,
+  debug : Boolean = true,
   iCacheSize : Int = 4096,
   dCacheSize : Int = 4096
 )
@@ -39,11 +40,10 @@ object GenCoreDefault{
       // Generate CPU plugin list
       val plugins = ArrayBuffer[Plugin[VexRiscv]]()
       plugins ++= List(
-        new PcManagerSimplePlugin(
-          resetVector = null, //null => external
-          relaxedPcCalculation = false
-        ),
         new IBusCachedPlugin(
+          resetVector = null,
+          relaxedPcCalculation = false,
+          prediction = STATIC,
           config = InstructionCacheConfig(
             cacheSize = argConfig.iCacheSize,
             bytePerLine =32,
@@ -55,7 +55,11 @@ object GenCoreDefault{
             catchAccessFault = true,
             catchMemoryTranslationMiss = true,
             asyncTagMemory = false,
-            twoCycleRam = true
+            twoCycleRam = true,
+            twoCycleCache = true
+          ),
+          memoryTranslatorPortConfig = MemoryTranslatorPortConfig(
+            portTlbSize = 4
           )
         ),
         new DBusCachedPlugin(
@@ -70,13 +74,22 @@ object GenCoreDefault{
             catchIllegal      = true,
             catchUnaligned    = true,
             catchMemoryTranslationMiss = true
-          ),
-          memoryTranslatorPortConfig = null,
+            ),
+          memoryTranslatorPortConfig = MemoryTranslatorPortConfig(
+            portTlbSize = 6
+            ),
           csrInfo = true
         ),
-        new StaticMemoryTranslatorPlugin(
-          ioRange      = _.msb
+        new MemoryTranslatorPlugin(
+          tlbSize = 256,
+          kernelRange  = (x => x(31 downto 28) === 0xC),
+          virtualRange = (x => x(31 downto 28) >= 0 && x(31 downto 28) <= 0xB),
+          ioRange      = (x => True)//(x => x(31 downto 28) === 0xB || x(31 downto 28) === 0xE)
         ),
+
+/*        new StaticMemoryTranslatorPlugin(
+          ioRange      = _.msb
+        ),*/
         new DecoderSimplePlugin(
           catchIllegalInstruction = true
         ),
@@ -89,7 +102,7 @@ object GenCoreDefault{
           separatedAddSub = false,
           executeInsertion = true
         ),
-        new FullBarrielShifterPlugin,
+        new FullBarrelShifterPlugin,
         new MulPlugin,
         new DivPlugin,
         new HazardSimplePlugin(
@@ -104,12 +117,16 @@ object GenCoreDefault{
         new BranchPlugin(
           earlyBranch = false,
           catchAddressMisaligned = true,
-          prediction = STATIC
+          fenceiGenAsAJump = true
         ),
         new CsrPlugin(
-          config = CsrPluginConfig.small(mtvecInit = null).copy(mtvecAccess = WRITE_ONLY)
+          config = CsrPluginConfig.all2(null)
+          //(mtvecInit = null).copy(mtvecAccess = READ_WRITE)
         ),
-        new ExternalInterruptArrayPlugin(),
+        new ExternalInterruptArrayPlugin(
+          maskCsrId = 0xBC0,
+          pendingsCsrId = 0xFC0
+        ),
         new YamlPlugin("cpu0.yaml")
       )
 
@@ -135,6 +152,14 @@ object GenCoreDefault{
           case plugin: DBusCachedPlugin => {
             plugin.dBus.asDirectionLess()
             master(plugin.dBus.toWishbone()).setName("dBusWishbone")
+          }
+          case plugin: DebugPlugin => {
+            plugin.io.bus.asDirectionLess()
+            val jtag = slave(new Jtag())
+              .setName("jtag")
+            jtag <> plugin.io.bus.fromJtag()
+            plugin.io.resetOut
+              .parent = null //Avoid the io bundle to be interpreted as a QSys conduit
           }
           case _ =>
         }
