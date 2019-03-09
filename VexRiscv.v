@@ -1,5 +1,5 @@
-// Generator : SpinalHDL v1.2.2    git head : 1ea4116304378d5dbbc58bb040d794da274a56b1
-// Date      : 09/03/2019, 12:04:56
+// Generator : SpinalHDL v1.2.2    git head : 8feacd9c70babecc50c13ec0f510959bd8b7da37
+// Date      : 09/03/2019, 12:14:49
 // Component : VexRiscv
 
 
@@ -1559,8 +1559,8 @@ endmodule
 module VexRiscv (
       input  [31:0] externalResetVector,
       input   timerInterrupt,
+      input   externalInterrupt,
       input   timerInterruptS,
-      input   externalInterruptS,
       input  [31:0] externalInterruptArray,
       output  debug_resetOut,
       output reg  iBusWishbone_CYC,
@@ -2355,7 +2355,7 @@ module VexRiscv (
   wire [31:0] memory_exception_agregat_payload_badAddr;
   reg  _zz_135_;
   reg [31:0] _zz_136_;
-  wire  externalInterrupt;
+  wire  externalInterruptS;
   wire  contextSwitching;
   reg [1:0] CsrPlugin_privilege;
   reg  _zz_137_;
@@ -5415,7 +5415,7 @@ module VexRiscv (
   assign execute_CsrPlugin_readEnable = (execute_CsrPlugin_readInstruction && (! execute_arbitration_isStuck));
   assign execute_CsrPlugin_csrAddress = execute_INSTRUCTION[31 : 20];
   assign _zz_261_ = (_zz_260_ & externalInterruptArray_regNext);
-  assign externalInterrupt = (_zz_261_ != (32'b00000000000000000000000000000000));
+  assign externalInterruptS = (_zz_261_ != (32'b00000000000000000000000000000000));
   assign DebugPlugin_isPipBusy = (DebugPlugin_isPipActive || DebugPlugin_isPipActive_regNext);
   always @ (*) begin
     debug_bus_cmd_ready = 1'b1;
