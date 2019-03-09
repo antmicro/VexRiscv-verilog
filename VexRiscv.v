@@ -1,7 +1,18 @@
-// Generator : SpinalHDL v1.2.2    git head : 8feacd9c70babecc50c13ec0f510959bd8b7da37
-// Date      : 09/03/2019, 12:14:49
+// Generator : SpinalHDL v1.2.2    git head : 76ddae01390254731181b401b830e26187e9a401
+// Date      : 09/03/2019, 16:17:31
 // Component : VexRiscv
 
+
+`define AluCtrlEnum_defaultEncoding_type [1:0]
+`define AluCtrlEnum_defaultEncoding_ADD_SUB 2'b00
+`define AluCtrlEnum_defaultEncoding_SLT_SLTU 2'b01
+`define AluCtrlEnum_defaultEncoding_BITWISE 2'b10
+
+`define Src2CtrlEnum_defaultEncoding_type [1:0]
+`define Src2CtrlEnum_defaultEncoding_RS 2'b00
+`define Src2CtrlEnum_defaultEncoding_IMI 2'b01
+`define Src2CtrlEnum_defaultEncoding_IMS 2'b10
+`define Src2CtrlEnum_defaultEncoding_PC 2'b11
 
 `define Src1CtrlEnum_defaultEncoding_type [1:0]
 `define Src1CtrlEnum_defaultEncoding_RS 2'b00
@@ -9,28 +20,17 @@
 `define Src1CtrlEnum_defaultEncoding_PC_INCREMENT 2'b10
 `define Src1CtrlEnum_defaultEncoding_URS1 2'b11
 
-`define ShiftCtrlEnum_defaultEncoding_type [1:0]
-`define ShiftCtrlEnum_defaultEncoding_DISABLE_1 2'b00
-`define ShiftCtrlEnum_defaultEncoding_SLL_1 2'b01
-`define ShiftCtrlEnum_defaultEncoding_SRL_1 2'b10
-`define ShiftCtrlEnum_defaultEncoding_SRA_1 2'b11
-
-`define AluCtrlEnum_defaultEncoding_type [1:0]
-`define AluCtrlEnum_defaultEncoding_ADD_SUB 2'b00
-`define AluCtrlEnum_defaultEncoding_SLT_SLTU 2'b01
-`define AluCtrlEnum_defaultEncoding_BITWISE 2'b10
-
 `define BranchCtrlEnum_defaultEncoding_type [1:0]
 `define BranchCtrlEnum_defaultEncoding_INC 2'b00
 `define BranchCtrlEnum_defaultEncoding_B 2'b01
 `define BranchCtrlEnum_defaultEncoding_JAL 2'b10
 `define BranchCtrlEnum_defaultEncoding_JALR 2'b11
 
-`define Src2CtrlEnum_defaultEncoding_type [1:0]
-`define Src2CtrlEnum_defaultEncoding_RS 2'b00
-`define Src2CtrlEnum_defaultEncoding_IMI 2'b01
-`define Src2CtrlEnum_defaultEncoding_IMS 2'b10
-`define Src2CtrlEnum_defaultEncoding_PC 2'b11
+`define AluBitwiseCtrlEnum_defaultEncoding_type [1:0]
+`define AluBitwiseCtrlEnum_defaultEncoding_XOR_1 2'b00
+`define AluBitwiseCtrlEnum_defaultEncoding_OR_1 2'b01
+`define AluBitwiseCtrlEnum_defaultEncoding_AND_1 2'b10
+`define AluBitwiseCtrlEnum_defaultEncoding_SRC1 2'b11
 
 `define JtagState_defaultEncoding_type [3:0]
 `define JtagState_defaultEncoding_RESET 4'b0000
@@ -50,11 +50,9 @@
 `define JtagState_defaultEncoding_DR_EXIT2 4'b1110
 `define JtagState_defaultEncoding_DR_UPDATE 4'b1111
 
-`define AluBitwiseCtrlEnum_defaultEncoding_type [1:0]
-`define AluBitwiseCtrlEnum_defaultEncoding_XOR_1 2'b00
-`define AluBitwiseCtrlEnum_defaultEncoding_OR_1 2'b01
-`define AluBitwiseCtrlEnum_defaultEncoding_AND_1 2'b10
-`define AluBitwiseCtrlEnum_defaultEncoding_SRC1 2'b11
+`define DataCacheCpuCmdKind_defaultEncoding_type [0:0]
+`define DataCacheCpuCmdKind_defaultEncoding_MEMORY 1'b0
+`define DataCacheCpuCmdKind_defaultEncoding_MANAGMENT 1'b1
 
 `define EnvCtrlEnum_defaultEncoding_type [1:0]
 `define EnvCtrlEnum_defaultEncoding_NONE 2'b00
@@ -62,9 +60,11 @@
 `define EnvCtrlEnum_defaultEncoding_WFI 2'b10
 `define EnvCtrlEnum_defaultEncoding_ECALL 2'b11
 
-`define DataCacheCpuCmdKind_defaultEncoding_type [0:0]
-`define DataCacheCpuCmdKind_defaultEncoding_MEMORY 1'b0
-`define DataCacheCpuCmdKind_defaultEncoding_MANAGMENT 1'b1
+`define ShiftCtrlEnum_defaultEncoding_type [1:0]
+`define ShiftCtrlEnum_defaultEncoding_DISABLE_1 2'b00
+`define ShiftCtrlEnum_defaultEncoding_SLL_1 2'b01
+`define ShiftCtrlEnum_defaultEncoding_SRL_1 2'b10
+`define ShiftCtrlEnum_defaultEncoding_SRA_1 2'b11
 
 module BufferCC (
       input   io_dataIn,
@@ -3028,10 +3028,10 @@ module VexRiscv (
   assign _zz_486_ = execute_CsrPlugin_writeData[11 : 11];
   assign _zz_487_ = execute_CsrPlugin_writeData[7 : 7];
   assign _zz_488_ = execute_CsrPlugin_writeData[3 : 3];
-  assign _zz_489_ = execute_CsrPlugin_writeData[9 : 9];
-  assign _zz_490_ = execute_CsrPlugin_writeData[5 : 5];
-  assign _zz_491_ = execute_CsrPlugin_writeData[1 : 1];
-  assign _zz_492_ = execute_CsrPlugin_writeData[31 : 31];
+  assign _zz_489_ = execute_CsrPlugin_writeData[31 : 31];
+  assign _zz_490_ = execute_CsrPlugin_writeData[9 : 9];
+  assign _zz_491_ = execute_CsrPlugin_writeData[5 : 5];
+  assign _zz_492_ = execute_CsrPlugin_writeData[1 : 1];
   assign _zz_493_ = (iBus_cmd_payload_address >>> 5);
   assign _zz_494_ = 1'b1;
   assign _zz_495_ = execute_SRC1[7 : 0];
@@ -5159,18 +5159,22 @@ module VexRiscv (
 
   always @ (*) begin
     CsrPlugin_interrupt = 1'b0;
+    CsrPlugin_interruptCode = (4'bxxxx);
     CsrPlugin_interruptTargetPrivilege = (2'bxx);
     if((CsrPlugin_sstatus_SIE && (CsrPlugin_privilege <= (2'b01))))begin
       if(((_zz_249_ || _zz_250_) || _zz_251_))begin
         CsrPlugin_interrupt = 1'b1;
       end
       if(_zz_249_)begin
+        CsrPlugin_interruptCode = (4'b0101);
         CsrPlugin_interruptTargetPrivilege = _zz_257_;
       end
       if(_zz_250_)begin
+        CsrPlugin_interruptCode = (4'b0001);
         CsrPlugin_interruptTargetPrivilege = _zz_258_;
       end
       if(_zz_251_)begin
+        CsrPlugin_interruptCode = (4'b1001);
         CsrPlugin_interruptTargetPrivilege = _zz_259_;
       end
     end
@@ -5179,26 +5183,20 @@ module VexRiscv (
         CsrPlugin_interrupt = 1'b1;
       end
       if(_zz_252_)begin
+        CsrPlugin_interruptCode = (4'b0111);
         CsrPlugin_interruptTargetPrivilege = (2'b11);
       end
       if(_zz_253_)begin
+        CsrPlugin_interruptCode = (4'b0011);
         CsrPlugin_interruptTargetPrivilege = (2'b11);
       end
       if(_zz_254_)begin
+        CsrPlugin_interruptCode = (4'b1011);
         CsrPlugin_interruptTargetPrivilege = (2'b11);
       end
     end
     if((! _zz_137_))begin
       CsrPlugin_interrupt = 1'b0;
-    end
-  end
-
-  always @ (*) begin
-    CsrPlugin_interruptCode = (4'bxxxx);
-    if((CsrPlugin_privilege == (2'b11)))begin
-      CsrPlugin_interruptCode = (4'b1011);
-    end else begin
-      CsrPlugin_interruptCode = (4'b1001);
     end
   end
 
@@ -5297,13 +5295,25 @@ module VexRiscv (
         execute_CsrPlugin_readData[5 : 5] = CsrPlugin_sstatus_SPIE;
         execute_CsrPlugin_readData[1 : 1] = CsrPlugin_sstatus_SIE;
       end
+      12'b001100000010 : begin
+        execute_CsrPlugin_illegalAccess = 1'b0;
+        execute_CsrPlugin_readData[31 : 0] = CsrPlugin_medeleg;
+      end
       12'b001101000001 : begin
         execute_CsrPlugin_illegalAccess = 1'b0;
         execute_CsrPlugin_readData[31 : 0] = CsrPlugin_mepc;
       end
-      12'b001100000010 : begin
-        execute_CsrPlugin_illegalAccess = 1'b0;
-        execute_CsrPlugin_readData[31 : 0] = CsrPlugin_medeleg;
+      12'b101100000000 : begin
+        if(execute_CSR_READ_OPCODE)begin
+          execute_CsrPlugin_illegalAccess = 1'b0;
+        end
+        execute_CsrPlugin_readData[31 : 0] = CsrPlugin_mcycle[31 : 0];
+      end
+      12'b101110000000 : begin
+        if(execute_CSR_READ_OPCODE)begin
+          execute_CsrPlugin_illegalAccess = 1'b0;
+        end
+        execute_CsrPlugin_readData[31 : 0] = CsrPlugin_mcycle[63 : 32];
       end
       12'b001101000100 : begin
         execute_CsrPlugin_illegalAccess = 1'b0;
@@ -5321,10 +5331,6 @@ module VexRiscv (
         execute_CsrPlugin_readData[30 : 22] = CsrPlugin_satp_ASID;
         execute_CsrPlugin_readData[21 : 0] = CsrPlugin_satp_PPN;
       end
-      12'b000101000001 : begin
-        execute_CsrPlugin_illegalAccess = 1'b0;
-        execute_CsrPlugin_readData[31 : 0] = CsrPlugin_sepc;
-      end
       12'b110011000000 : begin
         if(execute_CSR_READ_OPCODE)begin
           execute_CsrPlugin_illegalAccess = 1'b0;
@@ -5332,13 +5338,9 @@ module VexRiscv (
         execute_CsrPlugin_readData[12 : 0] = (13'b1000000000000);
         execute_CsrPlugin_readData[25 : 20] = (6'b100000);
       end
-      12'b000100000101 : begin
+      12'b000101000001 : begin
         execute_CsrPlugin_illegalAccess = 1'b0;
-        execute_CsrPlugin_readData[31 : 0] = CsrPlugin_stvec;
-      end
-      12'b001101000011 : begin
-        execute_CsrPlugin_illegalAccess = 1'b0;
-        execute_CsrPlugin_readData[31 : 0] = CsrPlugin_mtval;
+        execute_CsrPlugin_readData[31 : 0] = CsrPlugin_sepc;
       end
       12'b000101000100 : begin
         execute_CsrPlugin_illegalAccess = 1'b0;
@@ -5346,11 +5348,25 @@ module VexRiscv (
         execute_CsrPlugin_readData[5 : 5] = CsrPlugin_sip_STIP;
         execute_CsrPlugin_readData[1 : 1] = CsrPlugin_sip_SSIP;
       end
+      12'b001101000011 : begin
+        execute_CsrPlugin_illegalAccess = 1'b0;
+        execute_CsrPlugin_readData[31 : 0] = CsrPlugin_mtval;
+      end
+      12'b000100000101 : begin
+        execute_CsrPlugin_illegalAccess = 1'b0;
+        execute_CsrPlugin_readData[31 : 0] = CsrPlugin_stvec;
+      end
       12'b111111000000 : begin
         if(execute_CSR_READ_OPCODE)begin
           execute_CsrPlugin_illegalAccess = 1'b0;
         end
         execute_CsrPlugin_readData[31 : 0] = _zz_261_;
+      end
+      12'b110000000000 : begin
+        if(execute_CSR_READ_OPCODE)begin
+          execute_CsrPlugin_illegalAccess = 1'b0;
+        end
+        execute_CsrPlugin_readData[31 : 0] = CsrPlugin_mcycle[31 : 0];
       end
       12'b001101000000 : begin
         execute_CsrPlugin_illegalAccess = 1'b0;
@@ -5370,16 +5386,22 @@ module VexRiscv (
         execute_CsrPlugin_illegalAccess = 1'b0;
         execute_CsrPlugin_readData[31 : 0] = CsrPlugin_sscratch;
       end
-      12'b000100000100 : begin
-        execute_CsrPlugin_illegalAccess = 1'b0;
-        execute_CsrPlugin_readData[9 : 9] = CsrPlugin_sie_SEIE;
-        execute_CsrPlugin_readData[5 : 5] = CsrPlugin_sie_STIE;
-        execute_CsrPlugin_readData[1 : 1] = CsrPlugin_sie_SSIE;
+      12'b110010000000 : begin
+        if(execute_CSR_READ_OPCODE)begin
+          execute_CsrPlugin_illegalAccess = 1'b0;
+        end
+        execute_CsrPlugin_readData[31 : 0] = CsrPlugin_mcycle[31 : 0];
       end
       12'b001101000010 : begin
         execute_CsrPlugin_illegalAccess = 1'b0;
         execute_CsrPlugin_readData[31 : 31] = CsrPlugin_mcause_interrupt;
         execute_CsrPlugin_readData[3 : 0] = CsrPlugin_mcause_exceptionCode;
+      end
+      12'b000100000100 : begin
+        execute_CsrPlugin_illegalAccess = 1'b0;
+        execute_CsrPlugin_readData[9 : 9] = CsrPlugin_sie_SEIE;
+        execute_CsrPlugin_readData[5 : 5] = CsrPlugin_sie_STIE;
+        execute_CsrPlugin_readData[1 : 1] = CsrPlugin_sie_SSIE;
       end
       default : begin
       end
@@ -5900,12 +5922,16 @@ module VexRiscv (
             CsrPlugin_sstatus_SIE <= _zz_483_[0];
           end
         end
-        12'b001101000001 : begin
-        end
         12'b001100000010 : begin
           if(execute_CsrPlugin_writeEnable)begin
             CsrPlugin_medeleg <= execute_CsrPlugin_writeData[31 : 0];
           end
+        end
+        12'b001101000001 : begin
+        end
+        12'b101100000000 : begin
+        end
+        12'b101110000000 : begin
         end
         12'b001101000100 : begin
           if(execute_CsrPlugin_writeEnable)begin
@@ -5916,20 +5942,22 @@ module VexRiscv (
         end
         12'b000110000000 : begin
         end
-        12'b000101000001 : begin
-        end
         12'b110011000000 : begin
         end
-        12'b000100000101 : begin
-        end
-        12'b001101000011 : begin
+        12'b000101000001 : begin
         end
         12'b000101000100 : begin
           if(execute_CsrPlugin_writeEnable)begin
             CsrPlugin_sip_SSIP <= _zz_485_[0];
           end
         end
+        12'b001101000011 : begin
+        end
+        12'b000100000101 : begin
+        end
         12'b111111000000 : begin
+        end
+        12'b110000000000 : begin
         end
         12'b001101000000 : begin
         end
@@ -5944,14 +5972,16 @@ module VexRiscv (
         end
         12'b000101000000 : begin
         end
-        12'b000100000100 : begin
-          if(execute_CsrPlugin_writeEnable)begin
-            CsrPlugin_sie_SEIE <= _zz_489_[0];
-            CsrPlugin_sie_STIE <= _zz_490_[0];
-            CsrPlugin_sie_SSIE <= _zz_491_[0];
-          end
+        12'b110010000000 : begin
         end
         12'b001101000010 : begin
+        end
+        12'b000100000100 : begin
+          if(execute_CsrPlugin_writeEnable)begin
+            CsrPlugin_sie_SEIE <= _zz_490_[0];
+            CsrPlugin_sie_STIE <= _zz_491_[0];
+            CsrPlugin_sie_SSIE <= _zz_492_[0];
+          end
         end
         default : begin
         end
@@ -6469,12 +6499,16 @@ module VexRiscv (
       end
       12'b000100000000 : begin
       end
+      12'b001100000010 : begin
+      end
       12'b001101000001 : begin
         if(execute_CsrPlugin_writeEnable)begin
           CsrPlugin_mepc <= execute_CsrPlugin_writeData[31 : 0];
         end
       end
-      12'b001100000010 : begin
+      12'b101100000000 : begin
+      end
+      12'b101110000000 : begin
       end
       12'b001101000100 : begin
       end
@@ -6490,26 +6524,28 @@ module VexRiscv (
           CsrPlugin_satp_PPN <= execute_CsrPlugin_writeData[21 : 0];
         end
       end
+      12'b110011000000 : begin
+      end
       12'b000101000001 : begin
         if(execute_CsrPlugin_writeEnable)begin
           CsrPlugin_sepc <= execute_CsrPlugin_writeData[31 : 0];
         end
       end
-      12'b110011000000 : begin
-      end
-      12'b000100000101 : begin
-        if(execute_CsrPlugin_writeEnable)begin
-          CsrPlugin_stvec <= execute_CsrPlugin_writeData[31 : 0];
-        end
+      12'b000101000100 : begin
       end
       12'b001101000011 : begin
         if(execute_CsrPlugin_writeEnable)begin
           CsrPlugin_mtval <= execute_CsrPlugin_writeData[31 : 0];
         end
       end
-      12'b000101000100 : begin
+      12'b000100000101 : begin
+        if(execute_CsrPlugin_writeEnable)begin
+          CsrPlugin_stvec <= execute_CsrPlugin_writeData[31 : 0];
+        end
       end
       12'b111111000000 : begin
+      end
+      12'b110000000000 : begin
       end
       12'b001101000000 : begin
         if(execute_CsrPlugin_writeEnable)begin
@@ -6528,13 +6564,15 @@ module VexRiscv (
           CsrPlugin_sscratch <= execute_CsrPlugin_writeData[31 : 0];
         end
       end
-      12'b000100000100 : begin
+      12'b110010000000 : begin
       end
       12'b001101000010 : begin
         if(execute_CsrPlugin_writeEnable)begin
-          CsrPlugin_mcause_interrupt <= _zz_492_[0];
+          CsrPlugin_mcause_interrupt <= _zz_489_[0];
           CsrPlugin_mcause_exceptionCode <= execute_CsrPlugin_writeData[3 : 0];
         end
+      end
+      12'b000100000100 : begin
       end
       default : begin
       end
