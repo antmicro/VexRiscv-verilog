@@ -76,7 +76,7 @@ object GenCoreDefault{
             catchMemoryTranslationMiss = true
             ),
           memoryTranslatorPortConfig = MemoryTranslatorPortConfig(
-            portTlbSize = 6
+            portTlbSize = 4
             ),
           csrInfo = true
         ),
@@ -119,6 +119,7 @@ object GenCoreDefault{
           catchAddressMisaligned = true,
           fenceiGenAsAJump = true
         ),
+        new DummyFencePlugin,
         new CsrPlugin(
           config = CsrPluginConfig.all2(null)
           //(mtvecInit = null).copy(mtvecAccess = READ_WRITE)
