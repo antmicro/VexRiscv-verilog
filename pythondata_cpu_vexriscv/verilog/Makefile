@@ -9,10 +9,10 @@ VexRiscv_Debug.v: $(SRC)
 	sbt compile "runMain vexriscv.GenCoreDefault -d --outputFile VexRiscv_Debug"
 
 VexRiscv_Lite.v: $(SRC)
-	sbt compile "runMain vexriscv.GenCoreDefault --iCacheSize 2048 --dCacheSize 0 --mulDiv true --singleCycleShift false --singleCycleMulDiv false  --outputFile VexRiscv_Lite"
+	sbt compile "runMain vexriscv.GenCoreDefault --iCacheSize 2048 --dCacheSize 8192 --mulDiv true --singleCycleShift false --singleCycleMulDiv false  --outputFile VexRiscv_Lite"
 
 VexRiscv_LiteDebug.v: $(SRC)
-	sbt compile "runMain vexriscv.GenCoreDefault -d --iCacheSize 2048 --dCacheSize 0 --mulDiv true --singleCycleShift false --singleCycleMulDiv false --outputFile VexRiscv_LiteDebug"
+	sbt compile "runMain vexriscv.GenCoreDefault -d --iCacheSize 2048 --dCacheSize 8192 --mulDiv true --singleCycleShift false --singleCycleMulDiv false --outputFile VexRiscv_LiteDebug"
 
 VexRiscv_IMAC.v: $(SRC)
 	sbt compile "runMain vexriscv.GenCoreDefault --csrPluginConfig all --atomics true --compressedGen true --outputFile VexRiscv_IMAC"
@@ -21,16 +21,16 @@ VexRiscv_IMACDebug.v: $(SRC)
 	sbt compile "runMain vexriscv.GenCoreDefault --csrPluginConfig all --atomics true --compressedGen true -d --outputFile VexRiscv_IMACDebug"
 
 VexRiscv_Min.v: $(SRC)
-	sbt compile "runMain vexriscv.GenCoreDefault --iCacheSize 0 --dCacheSize 0 --mulDiv false --singleCycleShift false --singleCycleMulDiv false --bypass false --prediction none --outputFile VexRiscv_Min"
+	sbt compile "runMain vexriscv.GenCoreDefault --iCacheSize 0 --dCacheSize 8192 --mulDiv false --singleCycleShift false --singleCycleMulDiv false --bypass false --prediction none --outputFile VexRiscv_Min"
 
 VexRiscv_MinDebug.v: $(SRC)
-	sbt compile "runMain vexriscv.GenCoreDefault -d --iCacheSize 0 --dCacheSize 0 --mulDiv false --singleCycleShift false --singleCycleMulDiv false --bypass false --prediction none --outputFile VexRiscv_MinDebug"
+	sbt compile "runMain vexriscv.GenCoreDefault -d --iCacheSize 0 --dCacheSize 8192 --mulDiv false --singleCycleShift false --singleCycleMulDiv false --bypass false --prediction none --outputFile VexRiscv_MinDebug"
 
 VexRiscv_Fomu.v: $(SRC)
-	sbt compile "runMain vexriscv.GenCoreDefault --safe false --iCacheSize 0 --dCacheSize 0 --csrPluginConfig mcycle --mulDiv true --singleCycleShift false --singleCycleMulDiv false --bypass false --prediction none --outputFile VexRiscv_Fomu"
+	sbt compile "runMain vexriscv.GenCoreDefault --safe false --iCacheSize 0 --dCacheSize 8192 --csrPluginConfig mcycle --mulDiv true --singleCycleShift false --singleCycleMulDiv false --bypass false --prediction none --outputFile VexRiscv_Fomu"
 
 VexRiscv_FomuCfu.v: $(SRC)
-	sbt compile "runMain vexriscv.GenCoreDefault --safe false -d --cfu true --iCacheSize 0 --dCacheSize 0 --csrPluginConfig mcycle --mulDiv true --singleCycleShift false --singleCycleMulDiv false --bypass false --prediction none --outputFile VexRiscv_FomuCfu"
+	sbt compile "runMain vexriscv.GenCoreDefault --safe false -d --cfu true --iCacheSize 0 --dCacheSize 8192 --csrPluginConfig mcycle --mulDiv true --singleCycleShift false --singleCycleMulDiv false --bypass false --prediction none --outputFile VexRiscv_FomuCfu"
 
 VexRiscv_Full.v: $(SRC)
 	sbt compile "runMain vexriscv.GenCoreDefault --csrPluginConfig all --outputFile VexRiscv_Full"
@@ -48,11 +48,11 @@ VexRiscv_FullCfuDebug.v: $(SRC)
 
 # CFU versions must have module name changed because they will be wrapped
 VexRiscv_SlimCfu.v: $(SRC)
-	sbt compile "runMain vexriscv.GenCoreDefault --dCacheSize 0 --iCacheSize 1024 --csrPluginConfig all --cfu true --perfCSRs 8 --outputFile VexRiscv_SlimCfu"
+	sbt compile "runMain vexriscv.GenCoreDefault --dCacheSize 8192 --iCacheSize 1024 --csrPluginConfig all --cfu true --perfCSRs 8 --outputFile VexRiscv_SlimCfu"
 
 # CFU versions must have module name changed because they will be wrapped
 VexRiscv_SlimCfuDebug.v: $(SRC)
-	sbt compile "runMain vexriscv.GenCoreDefault --dCacheSize 0 --iCacheSize 1024 --csrPluginConfig all -d --cfu true --perfCSRs 8 --outputFile VexRiscv_SlimCfuDebug"
+	sbt compile "runMain vexriscv.GenCoreDefault --dCacheSize 8192 --iCacheSize 1024 --csrPluginConfig all -d --cfu true --perfCSRs 8 --outputFile VexRiscv_SlimCfuDebug"
 
 VexRiscv_Linux.v: $(SRC)
 	sbt compile "runMain vexriscv.GenCoreDefault --csrPluginConfig linux-minimal --outputFile VexRiscv_Linux"

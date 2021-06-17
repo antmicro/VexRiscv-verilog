@@ -1,4 +1,4 @@
 [submodule "pythondata_cpu_vexriscv/verilog/ext/VexRiscv"]
 	path = pythondata_cpu_vexriscv/verilog/ext/VexRiscv
-	url = https://github.com/SpinalHDL/VexRiscv.git
-	branch = master
+	url = https://github.com/antmicro/VexRiscv.git
+	branch = dcache-metrics
